@@ -1,0 +1,46 @@
+project-landing/
+├── laravel/                          # Все файлы Laravel здесь
+│   ├── app/
+│   ├── bootstrap/
+│   ├── config/
+│   ├── database/
+│   ├── public/
+│   ├── resources/
+│   ├── routes/
+│   ├── storage/
+│   ├── tests/
+│   ├── vendor/
+│   ├── .env.example
+│   ├── artisan
+│   ├── composer.json
+│   └── composer.lock
+├── docker/
+│   ├── develop/
+│   │   ├── Dockerfile
+│   │   ├── nginx/
+│   │   │   └── nginx.conf
+│   │   ├── php/
+│   │   │   └── php.ini
+│   │   └── scripts/
+│   │       ├── init.sh
+│   │       └── clean.sh
+│   └── prod/
+│       ├── Dockerfile
+│       ├── nginx/
+│       │   └── nginx.conf
+│       ├── php/
+│       │   └── php.ini
+│       └── scripts/
+│           └── deploy.sh
+├── .dockerignore
+├── .env.example
+├── .gitignore
+├── artisan
+├── composer.json
+├── composer.lock
+├── package.json
+├── phpunit.xml
+├── README.md
+├── docker-compose.yml
+├── docker-compose-prod.yml
+└── README.md

@@ -1,0 +1,74 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: docker/prod/Dockerfile
+    container_name: laravel_app_prod
+    restart: always
+    working_dir: /var/www
+    volumes:
+      - storage_data:/var/www/storage
+      - ./docker/prod/php/php.ini:/usr/local/etc/php/conf.d/custom.ini
+    networks:
+      - laravel-network-prod
+    depends_on:
+      - postgres
+    environment:
+      - APP_ENV=production
+      - APP_DEBUG=false
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_DATABASE=laravel_landing_prod
+      - DB_USERNAME=laravel_user
+      - DB_PASSWORD=production_password
+
+  webserver:
+    image: nginx:alpine
+    container_name: laravel_webserver_prod
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - .:/var/www
+      - ./docker/prod/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./ssl:/etc/nginx/ssl:ro
+    networks:
+      - laravel-network-prod
+    depends_on:
+      - app
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: laravel_postgres_prod
+    restart: always
+    environment:
+      POSTGRES_DB: laravel_landing_prod
+      POSTGRES_USER: laravel_user
+      POSTGRES_PASSWORD: production_password
+    volumes:
+      - postgres_data_prod:/var/lib/postgresql/data
+      - ./docker/prod/postgres/postgresql.conf:/etc/postgresql/postgresql.conf
+    networks:
+      - laravel-network-prod
+
+  redis:
+    image: redis:7-alpine
+    container_name: laravel_redis_prod
+    restart: always
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data_prod:/data
+    networks:
+      - laravel-network-prod
+
+volumes:
+  postgres_data_prod:
+  redis_data_prod:
+  storage_data:
+
+networks:
+  laravel-network-prod:
+    driver: bridge
